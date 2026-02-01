@@ -14,7 +14,7 @@ The app sends periodic reminders for salah (the islamic prayers) at appropriate 
 
 ## Features
 
-- Displays salah times in Muscat, Oman through the UI.
+- Detects your location and displays salah times through the UI (if the location is supported).
 - Allows the user to see yesterday & tomorrow's prayer times as well.
 - Sends the user reminders at set intervals to remind them to go to the mosque or pray at home if they are late.
   - Keeps track of whether the user has prayed already or not.
@@ -22,8 +22,8 @@ The app sends periodic reminders for salah (the islamic prayers) at appropriate 
 ## Limitations
 
 - Iqamah timings are variable based on the mosque, so the app's mosque reminder functionality would only work for me and others in my neighborhood.
-- At the moment, the app can only retrieve salah times for **Muscat, Oman** and **Kelowna, B.C., Canada** but the latter has not been set up yet.
-- While adhaan timings are fairly constant in Muscat, they may vary from mosque to mosque in other places.
+- At the moment, the app can only retrieve salah times for **Muscat, Oman** and **Kelowna, B.C., Canada**.
+- While adhaan timings are fairly consistent in Muscat, they may vary from mosque to mosque in other places.
 
 ## Next Steps
 
@@ -32,12 +32,12 @@ The app sends periodic reminders for salah (the islamic prayers) at appropriate 
 - Add a marker on the UI that signifies the upcoming prayer.
 - Improve the UI with bootstrap.
 - Add **Karachi, Pakistan** to the app as that is another city I often live in.
-  - Allow the user to switch between the cities but also add location detection.
-  - Remind the user based on the time at the location selected.
+- Allow the user to switch between cities manually.
+- Remind the user based on the local time at the selected location.
 
 ## Further Steps
 
-These are steps that would be cool to undertake, but I probably won't do them until a lot later.
+These are features that would be cool to implement, but I probably won't do them until a lot later.
 
 - Allow the user to modify the iqamah times in the UI for compatibility with different mosques.
 - Allow the prayer times for any location to be used.

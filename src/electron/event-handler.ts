@@ -1,8 +1,14 @@
 import { app, BrowserWindow, dialog } from "electron";
 import { ipcMainHandle } from "./utils.js";
-import { getSalahTimesPayload } from "./salah-times-muscat.js";
+import { getSalahTimesPayloadFunction } from "./salah-times-utils.js";
 
-export function handleEvents(mainWindow: BrowserWindow) {
+var getSalahTimesPayload: SalahTimesPayloadFunction;
+
+export async function handleEvents(
+  mainWindow: BrowserWindow,
+  locationId: string,
+) {
+  getSalahTimesPayload = await getSalahTimesPayloadFunction(locationId);
   mainWindow.on("minimize", () => mainWindow.hide());
   handleCloseEvent(mainWindow);
   ipcMainHandle("getSalahTimes", () => getSalahTimesPayload());

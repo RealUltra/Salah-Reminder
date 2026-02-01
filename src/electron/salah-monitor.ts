@@ -1,6 +1,9 @@
 import { BrowserWindow, dialog, Notification } from "electron";
-import { getSalahTimesPayload } from "./salah-times-muscat.js";
 import { formatTime, getSalahEndTime } from "./salah-times-utils.js";
+import { getSalahTimesPayloadFunction } from "./salah-times-utils.js";
+
+// We will load the appropriate function here based on the location
+var getSalahTimesPayload: SalahTimesPayloadFunction;
 
 const IQAMAH_REMINDER_INTERVALS: number[] = [25, 20, 15, 10, 5]; // in minutes
 const SALAH_END_REMINDER_INTERVALS: number[] = [60, 45, 30, 25, 20, 15, 10, 5]; // in minutes
@@ -47,7 +50,11 @@ interface SalahRecord {
 const userRecord: SalahRecord = { salah: null, prayed: false };
 
 /* Call the first remind() and get the infinite chain of scheduled reminders started. */
-export async function scheduleReminders(mainWindow: BrowserWindow) {
+export async function scheduleReminders(
+  mainWindow: BrowserWindow,
+  locationId: string,
+) {
+  getSalahTimesPayload = await getSalahTimesPayloadFunction(locationId);
   const payload = await waitForSalahTimesPayload();
   remind(payload, mainWindow);
 }

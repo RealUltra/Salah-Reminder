@@ -2,13 +2,19 @@ import { ipcMain, WebFrameMain } from "electron";
 import { pathToFileURL } from "url";
 import { getUIPath } from "./path-resolver.js";
 
+export const SUPPORTED_LOCATIONS = ["Muscat, Oman", "Kelowna, Canada"];
+export const LOCATION_LIBRARIES = [
+  "./salah-times-muscat.js",
+  "./salah-times-kelowna.js",
+];
+
 export function isDev(): boolean {
   return process.env.NODE_ENV === "development";
 }
 
 export function ipcMainHandle<Key extends keyof EventPayloadMapping>(
   key: Key,
-  handler: () => EventPayloadMapping[Key]
+  handler: () => EventPayloadMapping[Key],
 ) {
   ipcMain.handle(key, (event) => {
     if (!event.senderFrame) return;

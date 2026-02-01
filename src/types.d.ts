@@ -32,3 +32,10 @@ interface Window {
     getSalahTimes: () => Promise<SalahTimesPayload | null>;
   };
 }
+
+interface GeoPoint {
+  city: string | null;
+  country: string;
+}
+
+type SalahTimesPayloadFunction = () => Promise<SalahTimesPayload | null>

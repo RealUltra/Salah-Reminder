@@ -1,3 +1,5 @@
+import { LOCATION_LIBRARIES, SUPPORTED_LOCATIONS } from "./utils.js";
+
 export const MONTH_NAMES = [
   "january",
   "february",
@@ -52,4 +54,13 @@ export function formatTime(date: Date, includeSeconds: boolean = false) {
   const minutes = date.getMinutes().toString().padStart(2, "0");
   const seconds = date.getSeconds().toString().padStart(2, "0");
   return `${hours}:${minutes}` + (includeSeconds ? `:${seconds}` : "");
+}
+
+export async function getSalahTimesPayloadFunction(
+  locationId: string,
+): Promise<SalahTimesPayloadFunction> {
+  const idx = SUPPORTED_LOCATIONS.indexOf(locationId);
+  const file = LOCATION_LIBRARIES[idx];
+  const module = await import(file);
+  return module.getSalahTimesPayload as () => Promise<SalahTimesPayload | null>;
 }
