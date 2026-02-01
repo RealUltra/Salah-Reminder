@@ -1,10 +1,10 @@
 {
-    "appId": "com.codealyst.salah-reminder-muscat",
-    "productName": "Salah Reminder (Muscat)",
-    "files": ["dist-electron", "dist-react"],
-    "extraResources": ["dist-electron/preload.cjs", "src/assets/**"],
-    "icon": "./src/assets/icons/icon_1024.png",
-    "win": {
-        "target": ["portable", "msi"]
-    }
+  "appId": "com.codealyst.salah-reminder",
+  "productName": "Salah Reminder",
+  "files": ["dist-electron", "dist-react"],
+  "extraResources": ["dist-electron/preload.cjs", "src/assets/**"],
+  "icon": "./src/assets/icons/icon_1024.png",
+  "win": {
+    "target": ["portable", "msi"]
+  }
 }
