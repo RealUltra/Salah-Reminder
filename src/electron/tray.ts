@@ -8,7 +8,7 @@ export function createTray(mainWindow: BrowserWindow): Tray {
 
   const tray = new Tray(trayIcon);
 
-  tray.setToolTip("Salah Reminder (Muscat)");
+  tray.setToolTip("Salah Reminder");
 
   tray.on("click", () => {
     mainWindow.show();
@@ -22,7 +22,7 @@ function getTrayIcon(): NativeImage {
   const sizes = [16, 22, 32, 48, 1024];
 
   const iconPaths = sizes.map((s) =>
-    path.join(getAssetsPath(), "icons", `icon_${s}.png`)
+    path.join(getAssetsPath(), "icons", `icon_${s}.png`),
   );
   const images = iconPaths.map((p) => nativeImage.createFromPath(p));
 

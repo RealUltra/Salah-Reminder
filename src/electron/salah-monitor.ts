@@ -22,6 +22,10 @@ const SALAH_END_REMINDER_INTERVALS: number[] = [60, 45, 30, 25, 20, 15, 10, 5]; 
 
 */
 
+// Sometimes, reminders will be sent for the next prayer instead of the current prayer.
+// For example: 25 minutes before Maghrib, it is Asr time, but a Maghrib reminder will be sent.
+// This interface is used to store info about the current salah by `getCurrentSalahInfo`.
+// This info will be parsed by `getCurrentReminder` to determine whether to remind the user of the current prayer or the next one.
 interface SalahReminderInfo {
   salah: Salah;
   endTime: Date;
@@ -65,7 +69,7 @@ async function waitForSalahTimesPayload(): Promise<SalahTimesPayload> {
 
 /* Figure out what salah's time we are currently in i.e it was the last adhaan that happened and there is still time to pray. */
 function getCurrentSalahInfo(
-  payload: SalahTimesPayload
+  payload: SalahTimesPayload,
 ): SalahReminderInfo | null {
   const salahNames: SalahName[] = ["ishaa", "maghrib", "asr", "dhuhr", "fajr"];
 
@@ -254,7 +258,7 @@ async function remind(payload: SalahTimesPayload, mainWindow: BrowserWindow) {
     const delay = timeLeft - maxInterval;
 
     console.log(
-      `Non-current salah detected. Scheduling for: ${Date.now() + delay}`
+      `Non-current salah detected. Scheduling for: ${Date.now() + delay}`,
     );
 
     setTimeout(() => remind(payload, mainWindow), delay);
@@ -283,7 +287,7 @@ async function remind(payload: SalahTimesPayload, mainWindow: BrowserWindow) {
     const delay = timeLeft - maxInterval;
 
     console.log(
-      `Scheduling (late for iqamah) reminder for: ${Date.now() + delay}`
+      `Scheduling (late for iqamah) reminder for: ${Date.now() + delay}`,
     );
 
     setTimeout(() => remind(payload, mainWindow), delay);

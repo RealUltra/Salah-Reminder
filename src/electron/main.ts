@@ -7,8 +7,8 @@ import { scheduleReminders } from "./salah-monitor.js";
 import { createTray } from "./tray.js";
 import { handleEvents } from "./event-handler.js";
 
-app.setName("Salah Reminder (Muscat)");
-app.setAppUserModelId("com.codealyst.salah-reminder-muscat");
+app.setName("Salah Reminder");
+app.setAppUserModelId("com.codealyst.salah-reminder");
 
 Menu.setApplicationMenu(null);
 

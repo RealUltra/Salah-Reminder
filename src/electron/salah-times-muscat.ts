@@ -1,14 +1,12 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { parseDate, parseTime, getIsoDate } from "./salah-times-utils.js";
+import { MONTH_NAMES, getIsoDate } from "./salah-times-utils.js";
 
 type MultipleSalahTimes = Record<string, SalahTimes>;
 
-type SalahName = "fajr" | "dhuhr" | "asr" | "maghrib" | "ishaa";
-
-export async function getSalahTimesForMonth(
+async function getSalahTimesForMonth(
   year: number | null = null,
-  monthNum: number | null = null
+  monthNum: number | null = null,
 ): Promise<MultipleSalahTimes | null> {
   const now = new Date(Date.now());
 
@@ -103,23 +101,6 @@ export async function getSalahTimesForMonth(
   }
 }
 
-export async function getSalahTimesForDate(
-  date: Date | null = null
-): Promise<SalahTimes | null> {
-  date ??= new Date(Date.now());
-
-  const monthSalahTimes = await getSalahTimesForMonth(
-    date.getFullYear(),
-    date.getMonth() + 1
-  );
-
-  if (!monthSalahTimes) return null;
-
-  const key = getIsoDate(date);
-
-  return monthSalahTimes[key];
-}
-
 export async function getSalahTimesForDates(
   ...dates: Date[]
 ): Promise<MultipleSalahTimes | null> {
@@ -147,7 +128,7 @@ export async function getSalahTimesForDates(
   return results;
 }
 
-export function getIqamahTime(salahName: SalahName, salahTime: Date): Date {
+function getIqamahTime(salahName: SalahName, salahTime: Date): Date {
   const iqamahTime = new Date(salahTime);
 
   switch (salahName) {
@@ -185,7 +166,7 @@ export async function getSalahTimesPayload(): Promise<SalahTimesPayload | null> 
   const requiredSalahTimes = await getSalahTimesForDates(
     yesterday,
     today,
-    tomorrow
+    tomorrow,
   );
 
   if (!requiredSalahTimes) {
@@ -201,4 +182,43 @@ export async function getSalahTimesPayload(): Promise<SalahTimesPayload | null> 
     today: todaySalahTimes,
     tomorrow: tomorrowSalahTimes,
   };
+}
+
+function parseDate(rawDate: string, displayMonth: string): Date | null {
+  const match = rawDate.match(/\d+/);
+
+  if (!match) return null;
+
+  const dayNum = parseInt(match[0]);
+
+  const parts = displayMonth.trim().split(" ");
+
+  if (parts.length !== 2) return null;
+
+  const [monthName, yearStr] = parts;
+
+  const monthIndex = MONTH_NAMES.indexOf(monthName.toLowerCase());
+
+  if (monthIndex === -1) return null;
+
+  const year = parseInt(yearStr);
+
+  return new Date(year, monthIndex, dayNum);
+}
+
+function parseTime(rawTime: string, date: Date): Date | null {
+  const match = rawTime.match(/(\d{1,2})\:(\d{1,2})/);
+
+  if (!match) return null;
+
+  const hours = parseInt(match[1]);
+  const minutes = parseInt(match[2]);
+
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    hours,
+    minutes,
+  );
 }
