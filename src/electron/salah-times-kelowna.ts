@@ -124,14 +124,15 @@ function parseDisplayDate(rawDate: string): Date | null {
 }
 
 function parseTime(rawTime: string, date: Date): Date | null {
-  const match = rawTime.match(/(\d{1,2})\:(\d{1,2})\:(\d{1,2}) (AM|PM)/);
+  const match = rawTime.match(/(\d{1,2})\:(\d{1,2})(:(\d{1,2}))? (AM|PM)/);
 
   if (!match) return null;
 
   var hours = parseInt(match[1]);
   var minutes = parseInt(match[2]);
-  var seconds = parseInt(match[3]);
-  const meridiem = match[4];
+  var seconds = match[3] ? parseInt(match[4]) : 0;
+
+  const meridiem = match[5];
 
   if (meridiem === "AM") {
     if (hours === 12) {
