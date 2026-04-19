@@ -42,7 +42,3 @@ These are features that would be cool to implement, but I probably won't do them
 - Allow the user to modify the iqamah times in the UI for compatibility with different mosques.
 - Allow the prayer times for any location to be used.
 - Create a settings page in the UI to allow toggling reminders.
-
-## Active Bugs
-
-- The **Muscat, Oman** prayer times are not being scraped appropriately due to changes in the **muslimpro** website. This must be fixed by either scraping the website differently **(preferred)** or scraping a different website.
