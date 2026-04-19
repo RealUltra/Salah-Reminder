@@ -1,4 +1,5 @@
 import axios from "axios";
+import https from "https";
 import * as cheerio from "cheerio";
 import { MONTH_NAMES, getIsoDate } from "./salah-times-utils.js";
 
@@ -14,14 +15,17 @@ async function getSalahTimesForMonth(
   year ??= now.getFullYear();
 
   try {
-    const url = `https://prayer-times.muslimpro.com/en/Prayer-times-adhan-Muscat-Oman-287286?date=${year}-${monthNum}`;
-    const { data } = await axios.get(url);
+
+    
+    const url = `https://www.mara.gov.om/calendar_page2.asp`;
+    const { data } = await axios.post(url, { 
+      year: now.getFullYear(), 
+      month: monthNum
+    }, { httpsAgent: new https.Agent({ rejectUnauthorized: false }) });
 
     const $ = cheerio.load(data);
 
-    const displayMonth: string = $(".display-month").text();
-
-    const rows = $("table.prayer-times > tbody > tr");
+    const rows = $("table > tbody > tr").slice(1);
 
     const monthSalahTimes: MultipleSalahTimes = {};
 
@@ -38,7 +42,7 @@ async function getSalahTimesForMonth(
       const rawMaghribTime: string = $(columns[5]).text();
       const rawIshaaTime: string = $(columns[6]).text();
 
-      const date = parseDate(rawDate, displayMonth);
+      const date = parseDate(rawDate);
       const fajrTime = parseTime(rawFajrTime, date!);
       const sunriseTime = parseTime(rawSunriseTime, date!);
       const dhuhrTime = parseTime(rawDhuhrTime, date!);
@@ -59,6 +63,10 @@ async function getSalahTimesForMonth(
       ) {
         throw new Error("Could not fetch all the data!");
       }
+
+      asrTime.setHours(asrTime.getHours() + 12);
+      maghribTime.setHours(maghribTime.getHours() + 12);
+      ishaaTime.setHours(ishaaTime.getHours() + 12);
 
       const salahTimes: SalahTimes = {
         fajr: {
@@ -184,24 +192,14 @@ export async function getSalahTimesPayload(): Promise<SalahTimesPayload | null> 
   };
 }
 
-function parseDate(rawDate: string, displayMonth: string): Date | null {
-  const match = rawDate.match(/\d+/);
+function parseDate(rawDate: string): Date | null {
+  const match = rawDate.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
 
   if (!match) return null;
 
-  const dayNum = parseInt(match[0]);
-
-  const parts = displayMonth.trim().split(" ");
-
-  if (parts.length !== 2) return null;
-
-  const [monthName, yearStr] = parts;
-
-  const monthIndex = MONTH_NAMES.indexOf(monthName.toLowerCase());
-
-  if (monthIndex === -1) return null;
-
-  const year = parseInt(yearStr);
+  const dayNum = parseInt(match[1]);
+  const monthIndex = parseInt(match[2]) - 1;
+  const year = parseInt(match[3]);
 
   return new Date(year, monthIndex, dayNum);
 }
